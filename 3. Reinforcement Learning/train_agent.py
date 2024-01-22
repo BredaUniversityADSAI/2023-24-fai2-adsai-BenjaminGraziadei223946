@@ -36,10 +36,10 @@ if __name__ == "__main__":
     task.execute_remotely(queue_name="default")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--learning_rate", type=float, default=0.0005)
-    parser.add_argument("--batch_size", type=int, default=128)
+    parser.add_argument("--learning_rate", type=float, default=0.005)
+    parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--n_steps", type=int, default=1000)
-    parser.add_argument("--n_epochs", type=int, default=60)
+    parser.add_argument("--n_epochs", type=int, default=20)
 
     args = parser.parse_args()
     main()
