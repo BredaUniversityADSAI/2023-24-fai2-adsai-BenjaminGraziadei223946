@@ -26,7 +26,7 @@ def main():
                 tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
-    model.learn(total_timesteps=10000, callback=wandb_callback, progress_bar=True)
+    model.learn(total_timesteps=500000, callback=wandb_callback, progress_bar=True)
     model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
