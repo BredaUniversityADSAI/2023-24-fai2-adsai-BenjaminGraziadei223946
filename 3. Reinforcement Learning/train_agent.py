@@ -8,7 +8,7 @@ def main():
     env = OT2Env()
 
     # Instantiate the agent
-    model = PPO("MlpPolicy", env, verbose=1, learning_rate=0.005)
+    model = PPO("MlpPolicy", env, verbose=1)
     #model = PPO.load("ot2_model", env=env)
 
     # Train the agent
