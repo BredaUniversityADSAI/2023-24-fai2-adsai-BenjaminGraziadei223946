@@ -18,17 +18,13 @@ def main():
 
     model.learn(total_timesteps=1000, progress_bar=True)
     model.save("ot2_model")
-
-    # Test the trained model
-    print("Testing the trained model...")
-    #test_model(env, model)
+    test_model(env, model)
 
 def test_model(env, model):
     observation = env.reset()
     for _ in range(1000):
         action = model.predict(observation)
         observation, reward, terminated, truncated, info = env.step(action)
-        print(f"Episode: {_ + 1}, Action: {action}, Reward: {reward}")
         if truncated:
             observation = env.reset()
         if terminated:
