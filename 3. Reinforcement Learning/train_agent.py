@@ -30,7 +30,7 @@ def main():
     model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
-    task = Task.init(project_name='Mentor Group D/Group 1', task_name='agent 008')
+    task = Task.init(project_name='Mentor Group D/Group 1', task_name='agent 007')
     task.set_base_docker('deanis/2023y2b-rl:latest')
     #setting the task to run remotely on the default queue
     task.execute_remotely(queue_name="default")
