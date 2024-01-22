@@ -10,7 +10,7 @@ class OT2Env(gym.Env):
         self.render = render
         self.max_steps = max_steps
 
-        self.sim = Simulation(num_agents=1)
+        self.sim = Simulation(num_agents=1, render=self.render)
 
         # Define action space for x, y, z velocities
         self.action_space = gym.spaces.Box(low=np.array([-1,-1,-1, 0]), high=np.array([1,1,1, 0]), shape=(4,), dtype=np.float32)
