@@ -3,17 +3,27 @@ from stable_baselines3 import PPO
 from ot2_env_wrapper import OT2Env
 from clearml import Task
 import argparse
+import os
+import wandb
+from wandb.integration.sb3 import WandbCallback
 
 def main():
     # Create the environment
     env = OT2Env()
+    
+    os.environ['WANDB_API_KEY'] = '633d8379ec4fe0a5cd33330730b3d6a7f17b9c6f'
+    run = wandb.init(project="ot2-rl", entity="deanis", sync_tensorboard=True)
+    wandb_callback = WandbCallback(model_save_freq=1000,
+                                model_save_path=f"models/{run.id}",
+                                verbose=2)
 
     # Instantiate the agent
     model = PPO("MlpPolicy", env, verbose=1,
                 learning_rate=args.learning_rate, 
                 batch_size=args.batch_size, 
                 n_steps=args.n_steps, 
-                n_epochs=args.n_epochs)
+                n_epochs=args.n_epochs,
+                tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
     model.learn(total_timesteps=1000, progress_bar=True)
