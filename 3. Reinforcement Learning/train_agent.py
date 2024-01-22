@@ -17,21 +17,7 @@ def main():
     #model = PPO.load("ot2_model", env=env)
 
     model.learn(total_timesteps=1000, progress_bar=True)
-    model.save("ot2_model")
-    test_model(env, model)
-
-def test_model(env, model):
-    observation = env.reset()
-    for _ in range(1000):
-        action = model.predict(observation)
-        observation, reward, terminated, truncated, info = env.step(action)
-        if truncated:
-            observation = env.reset()
-        if terminated:
-            print("Goal Reached")
-            break
-
-    env.close()
+    model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
     task = Task.init(project_name='Mentor Group D/Group 1', task_name='agent 007')
