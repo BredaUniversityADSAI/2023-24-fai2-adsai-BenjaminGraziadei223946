@@ -67,20 +67,22 @@ class OT2Env(gym.Env):
         distance_improvement = prev_distance_to_goal - cur_distance_to_goal
 
         # Define constants for rewards, penalties, and scaling factors
-        GOAL_REACHED_REWARD = 100.0
+        GOAL_REACHED_REWARD = 500.0
+        SCALER = 10
 
         # Initialize static penalty for each time step
-        time_step_penalty = -0.01
+        time_step_penalty = -0.5
+        
 
         # Update penalty/reward based on direction of movement
         if distance_improvement > 0:  # Moving towards the goal
             self.consecutive_wrong_direction = 0
             self.consecutive_right_direction += 1
-            distance_reward = distance_improvement * self.consecutive_right_direction
+            distance_reward = distance_improvement * self.consecutive_right_direction * SCALER
         else:  # Moving away from the goal
             self.consecutive_right_direction = 0
             self.consecutive_wrong_direction += 1
-            distance_reward = distance_improvement * self.consecutive_wrong_direction
+            distance_reward = distance_improvement * self.consecutive_wrong_direction * SCALER
 
         # Check if the goal is reached
         termination_threshold = 0.0005
