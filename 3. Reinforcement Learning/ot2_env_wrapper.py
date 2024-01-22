@@ -22,6 +22,7 @@ class OT2Env(gym.Env):
         self.steps = 0
         self.prev_pipette_pos = None
         self.consecutive_wrong_direction = 0
+        self.consecutive_right_direction = 0
 
     def reset(self, seed=None):
         if seed is not None:
@@ -66,9 +67,8 @@ class OT2Env(gym.Env):
         distance_improvement = prev_distance_to_goal - cur_distance_to_goal
 
         # Define constants for rewards, penalties, and scaling factors
-        GOAL_REACHED_REWARD = 1.0
-        DISTANCE_REWARD_SCALING = 0.1
-        PENALTY_SCALING_FACTOR = 0.05  # Penalty increases with each step in wrong direction
+        GOAL_REACHED_REWARD = 100.0
+        DISTANCE_REWARD_SCALING = 5
 
         # Initialize static penalty for each time step
         time_step_penalty = -0.01
@@ -76,12 +76,12 @@ class OT2Env(gym.Env):
         # Update penalty/reward based on direction of movement
         if distance_improvement > 0:  # Moving towards the goal
             self.consecutive_wrong_direction = 0
-            distance_reward = distance_improvement * DISTANCE_REWARD_SCALING
+            self.consecutive_right_direction += 1
+            distance_reward = distance_improvement * DISTANCE_REWARD_SCALING * self.consecutive_right_direction
         else:  # Moving away from the goal
+            self.consecutive_right_direction = 0
             self.consecutive_wrong_direction += 1
-            distance_reward = distance_improvement * DISTANCE_REWARD_SCALING
-            # Increase the penalty for each consecutive step in the wrong direction
-            time_step_penalty -= self.consecutive_wrong_direction * PENALTY_SCALING_FACTOR
+            distance_reward = distance_improvement * DISTANCE_REWARD_SCALING * self.consecutive_wrong_direction
 
         # Check if the goal is reached
         termination_threshold = 0.0005
@@ -102,13 +102,6 @@ class OT2Env(gym.Env):
         self.prev_pipette_pos = pipette_pos.copy()
 
         return reward, terminated, truncated
-
-
-
-    def _check_done(self):
-        pipette_pos = self.current_state['robotId_1']['pipette_position']
-        distance_to_goal = np.linalg.norm(np.array(pipette_pos) - self.goal_position)
-        return distance_to_goal < 1 or self.steps
 
     def close(self):
         # Clean up resources if needed
