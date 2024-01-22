@@ -18,15 +18,15 @@ def main():
                                 verbose=2)
 
     # Instantiate the agent
-    #model = PPO("MlpPolicy", env, verbose=1,
-    #            learning_rate=args.learning_rate, 
-    #            batch_size=args.batch_size, 
-    #            n_steps=args.n_steps, 
-    #            n_epochs=args.n_epochs,
-    #            tensorboard_log=f"runs/{run.id}")
-    model = PPO.load("model", env=env)
+    model = PPO("MlpPolicy", env, verbose=1,
+                learning_rate=args.learning_rate, 
+                batch_size=args.batch_size, 
+                n_steps=args.n_steps, 
+                n_epochs=args.n_epochs,
+                tensorboard_log=f"runs/{run.id}")
+    #model = PPO.load("ot2_model", env=env)
 
-    model.learn(total_timesteps=500000, callback=wandb_callback, progress_bar=True)
+    model.learn(total_timesteps=5000000, callback=wandb_callback, progress_bar=True)
     model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
