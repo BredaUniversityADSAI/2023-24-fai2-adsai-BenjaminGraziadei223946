@@ -44,21 +44,7 @@ class OT2Env(gym.Env):
         observation = np.concatenate([pipette_pos_array, self.goal_position]).astype(np.float32)
         info = {}
         return observation, info
-
-    def step(self, action):
-        observation = self.sim.run([action])
-        self.steps += 1
-
-        pipette_pos = np.array(observation[f'robotId_{self.sim.robotIds[0]}']['pipette_position'], dtype=np.float32)
-
-
-        observation = np.concatenate([pipette_pos, self.goal_position]).astype(np.float32)
-
-        reward, terminated, truncated = self._calculate_reward(pipette_pos)
-        info = {}
-
-        return observation, reward, terminated, truncated, info
-
+    
     def _calculate_reward(self, pipette_pos):
         cur_distance_to_goal = np.linalg.norm(pipette_pos - self.goal_position)
         prev_distance_to_goal = np.linalg.norm(self.prev_pipette_pos - self.goal_position) if self.prev_pipette_pos is not None else cur_distance_to_goal
@@ -67,11 +53,8 @@ class OT2Env(gym.Env):
         distance_improvement = prev_distance_to_goal - cur_distance_to_goal
 
         # Define constants for rewards, penalties, and scaling factors
-        GOAL_REACHED_REWARD = 500.0
+        GOAL_REACHED_REWARD = 200.0
         SCALER = 10
-
-        # Initialize static penalty for each time step
-        time_step_penalty = -0.5
         
 
         # Update penalty/reward based on direction of movement
@@ -91,7 +74,7 @@ class OT2Env(gym.Env):
             reward = GOAL_REACHED_REWARD
         else:
             terminated = False
-            reward = distance_reward + time_step_penalty
+            reward = distance_reward
 
         # Check for truncation
         if self.steps >= self.max_steps:
@@ -103,6 +86,22 @@ class OT2Env(gym.Env):
         self.prev_pipette_pos = pipette_pos.copy()
 
         return reward, terminated, truncated
+
+    def step(self, action):
+        observation = self.sim.run([action])
+        self.steps += 1
+
+        pipette_pos = np.array(observation[f'robotId_{self.sim.robotIds[0]}']['pipette_position'], dtype=np.float32)
+
+
+        observation = np.concatenate([pipette_pos, self.goal_position]).astype(np.float32)
+
+        reward, terminated, truncated = self._calculate_reward(pipette_pos)
+        info = {}
+
+        return observation, reward, terminated, truncated, info
+
+    
 
     def close(self):
         # Clean up resources if needed
