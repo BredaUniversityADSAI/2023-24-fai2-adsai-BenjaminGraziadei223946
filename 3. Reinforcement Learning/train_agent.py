@@ -12,7 +12,7 @@ def main():
     env = OT2Env()
     
     os.environ['WANDB_API_KEY'] = '633d8379ec4fe0a5cd33330730b3d6a7f17b9c6f'
-    run = wandb.init(project="ot2-rl", entity="deanis", sync_tensorboard=True)
+    run = wandb.init(project="Model-RL", sync_tensorboard=True)
     wandb_callback = WandbCallback(model_save_freq=1000,
                                 model_save_path=f"models/{run.id}",
                                 verbose=2)
@@ -26,7 +26,7 @@ def main():
                 tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
-    model.learn(total_timesteps=1000, progress_bar=True)
+    model.learn(total_timesteps=1000, callback=wandb_callback, progress_bar=True)
     model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
