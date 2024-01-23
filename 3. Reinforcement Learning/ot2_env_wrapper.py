@@ -4,6 +4,25 @@ import numpy as np
 import os
 from sim_class import Simulation
 
+class PIDController:
+    def __init__(self, kp, ki, kd):
+        self.kp = kp  # Proportional gain
+        self.ki = ki  # Integral gain
+        self.kd = kd  # Derivative gain
+        self.integral = np.array([0.0, 0.0, 0.0])
+        self.prev_error = None
+
+    def update(self, current_pos, goal_pos, dt=1.0):
+        error = goal_pos - current_pos
+        self.integral += error * dt
+        derivative = (error - self.prev_error) / dt if self.prev_error is not None else np.array([0.0, 0.0, 0.0])
+        self.prev_error = error
+
+        # PID output
+        output = self.kp * error + self.ki * self.integral + self.kd * derivative
+        return output
+
+
 class OT2Env(gym.Env):
     def __init__(self, render=False, max_steps=1000):
         super(OT2Env, self).__init__()
@@ -23,6 +42,7 @@ class OT2Env(gym.Env):
         self.prev_pipette_pos = None
         self.consecutive_wrong_direction = 0
         self.consecutive_right_direction = 0
+        self.pid_controller = PIDController(kp=1.0, ki=0.1, kd=0.05)
 
     def reset(self, seed=None):
         if seed is not None:
@@ -88,11 +108,13 @@ class OT2Env(gym.Env):
         return reward, terminated, truncated
 
     def step(self, action):
-        observation = self.sim.run([action])
         self.steps += 1
 
         pipette_pos = np.array(observation[f'robotId_{self.sim.robotIds[0]}']['pipette_position'], dtype=np.float32)
 
+        pid_action = self.pid_controller.update(pipette_pos, self.goal_position)
+        pid_action = np.clip(pid_action, self.action_space.low, self.action_space.high)  # Ensure action is within bounds
+        observation = self.sim.run([pid_action])
 
         observation = np.concatenate([pipette_pos, self.goal_position]).astype(np.float32)
 
