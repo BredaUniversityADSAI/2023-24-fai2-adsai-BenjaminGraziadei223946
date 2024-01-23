@@ -68,7 +68,7 @@ class OT2Env(gym.Env):
             distance_reward = distance_improvement * self.consecutive_wrong_direction * SCALER
 
         # Check if the goal is reached
-        termination_threshold = 0.0005
+        termination_threshold = 0.001
         if cur_distance_to_goal < termination_threshold:
             terminated = True
             reward = GOAL_REACHED_REWARD + distance_reward
