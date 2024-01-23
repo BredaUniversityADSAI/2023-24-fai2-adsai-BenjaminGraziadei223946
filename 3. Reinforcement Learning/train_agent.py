@@ -1,5 +1,5 @@
 import gymnasium as gym
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, DQN
 from ot2_env_wrapper import OT2Env
 from clearml import Task
 import argparse
@@ -18,16 +18,11 @@ def main():
                                 verbose=2)
 
     # Instantiate the agent
-    model = PPO("MlpPolicy", env, verbose=1,
-                learning_rate=args.learning_rate, 
-                batch_size=args.batch_size, 
-                n_steps=args.n_steps, 
-                n_epochs=args.n_epochs,
+    model = DQN("MlpPolicy", env, verbose=1,
                 tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
     model.learn(total_timesteps=5000000, callback=wandb_callback, progress_bar=True)
-    model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
     task = Task.init(project_name='Mentor Group D/Group 1', task_name='agent 007')
