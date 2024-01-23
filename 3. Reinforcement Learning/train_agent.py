@@ -21,8 +21,6 @@ def main():
     model = SAC("MlpPolicy", env, verbose=1,
                     learning_rate=args.learning_rate,
                     batch_size=args.batch_size,
-                    n_steps=args.n_steps,
-                    n_epochs=args.n_epochs,
                 tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
