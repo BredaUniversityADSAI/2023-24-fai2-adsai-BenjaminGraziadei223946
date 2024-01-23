@@ -71,7 +71,7 @@ class OT2Env(gym.Env):
         termination_threshold = 0.0005
         if cur_distance_to_goal < termination_threshold:
             terminated = True
-            reward = GOAL_REACHED_REWARD
+            reward = GOAL_REACHED_REWARD + distance_reward
         else:
             terminated = False
             reward = distance_reward
