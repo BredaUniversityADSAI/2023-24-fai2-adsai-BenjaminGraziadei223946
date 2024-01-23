@@ -1,5 +1,5 @@
 import gymnasium as gym
-from stable_baselines3 import PPO, ACER
+from stable_baselines3 import PPO, SAC
 from ot2_env_wrapper import OT2Env
 from clearml import Task
 import argparse
@@ -18,7 +18,7 @@ def main():
                                 verbose=2)
 
     # Instantiate the agent
-    model = ACER("MlpPolicy", env, verbose=1,
+    model = SAC("MlpPolicy", env, verbose=1,
                     learning_rate=args.learning_rate,
                     batch_size=args.batch_size,
                     n_steps=args.n_steps,
