@@ -20,7 +20,6 @@ def main():
     # Instantiate the agent
     model = SAC("MlpPolicy", env, verbose=1,
                     learning_rate=args.learning_rate,
-                    batch_size=args.batch_size,
                 tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
