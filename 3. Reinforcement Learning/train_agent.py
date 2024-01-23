@@ -1,5 +1,5 @@
 import gymnasium as gym
-from stable_baselines3 import PPO, SAC
+from stable_baselines3 import PPO
 from ot2_env_wrapper import OT2Env
 from clearml import Task
 import argparse
@@ -18,12 +18,16 @@ def main():
                                 verbose=2)
 
     # Instantiate the agent
-    model = SAC("MlpPolicy", env, verbose=1,
-                    learning_rate=args.learning_rate,
+    model = PPO("MlpPolicy", env, verbose=1,
+                learning_rate=args.learning_rate, 
+                batch_size=args.batch_size, 
+                n_steps=args.n_steps, 
+                n_epochs=args.n_epochs,
                 tensorboard_log=f"runs/{run.id}")
     #model = PPO.load("ot2_model", env=env)
 
     model.learn(total_timesteps=5000000, callback=wandb_callback, progress_bar=True)
+    model.save("ot2_model_agent007")
 
 if __name__ == "__main__":
     task = Task.init(project_name='Mentor Group D/Group 1', task_name='agent 007')
@@ -32,10 +36,10 @@ if __name__ == "__main__":
     task.execute_remotely(queue_name="default")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--learning_rate", type=float, default=0.000001)
-    #parser.add_argument("--batch_size", type=int, default=256)
-    #parser.add_argument("--n_steps", type=int, default=1024)
-    #parser.add_argument("--n_epochs", type=int, default=100)
+    parser.add_argument("--learning_rate", type=float, default=0.00001)
+    parser.add_argument("--batch_size", type=int, default=512)
+    parser.add_argument("--n_steps", type=int, default=1024)
+    parser.add_argument("--n_epochs", type=int, default=60)
 
     args = parser.parse_args()
     main()
