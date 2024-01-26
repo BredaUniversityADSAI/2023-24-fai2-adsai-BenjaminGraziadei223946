@@ -116,7 +116,8 @@ def draw_main_root(image, skeleton_branch_data, u):
 
 ```
 This is how i get the root lengths, lateral root lengths, landmarks and endpoints. I am using all points from my summarization of the skeleton and load them into a graph with all the edges. Here it is important to add the branch lengths as weights so that it doesnt calculate the distance with the shortest path but rather the actual accurate root length. Next i am extracting the start point in the skeleton by looking at all nodes y axis and picking the highest (y axis is inverted so i search for the lowest y value). Next i am looking for all paths from this points until i find the longest possible, this will be my main root, important here again to add the weights for accurate lengths. This is how an image with landmarks looks:
-![Comparison Graph](C:\Users\benjm\Documents\GitHub\2023-24-fai2-adsai-BenjaminGraziadei223946\4. Deliverables\landmarks.png)
+
+![Landmark Image](https://github.com/BredaUniversityADSAI/2023-24-fai2-adsai-BenjaminGraziadei223946/blob/main/4.%20Deliverables/benchmark.png)
 
 ## Bridging Digital and Physical: Point Extraction and Coordinate Transformation
 Last part of the pipeline is the robotics part. Here i am using the coordinates of the root ends, which i transorm to the real world coordinates using my get_meter_coordinates function. This is how it works: i get the pixel coordinate on the screen convert those into meters with a given conversion rate (24pixels/mm) and then due to the robots workarea being much bigger than the space my plants are on i have to add the offset in the code set as start_point, important here is to swap the points x and y axis because the robots axis are inverted.
