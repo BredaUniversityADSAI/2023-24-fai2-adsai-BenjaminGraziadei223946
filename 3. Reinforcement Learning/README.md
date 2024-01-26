@@ -56,3 +56,12 @@ This environment relies on a custom `Simulation` class (referred to as `sim_clas
 - The environment is designed for a specific simulation involving pipette manipulation.
 - It assumes certain structure and data from the `sim_class`.
 - Modify and extend as per your simulation requirements.
+
+## Hyperparameters
+Tested:
+- learning rate: 0.005, 0.0025, 0.001, 0.0001, 0.00005, 0.00001, 0.000001
+- batch size: 64, 128, 256, 512
+- n_steps: 512, 1024
+- epochs: 40, 60, 80
+
+Final model: lr: 0.000001, batch size: 256, n_steps: 512, epochs: 40
