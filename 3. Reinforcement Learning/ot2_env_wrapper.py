@@ -24,14 +24,17 @@ class OT2Env(gym.Env):
         self.consecutive_wrong_direction = 0
         self.consecutive_right_direction = 0
 
-    def reset(self, seed=None):
+    def reset(self, seed=None, goal_position=None):
         if seed is not None:
             np.random.seed(seed)
         # Reset the environment to an initial state
         current_position = self.sim.reset(num_agents=1)
-        self.goal_position = np.array([np.random.uniform(-0.1872, 0.253),
-                                   np.random.uniform(-0.1705, 0.2195),
-                                   np.random.uniform(0.1693, 0.2895)], dtype=np.float32)
+        if goal_position is not None:
+            self.goal_position = goal_position
+        else:
+            self.goal_position = np.array([np.random.uniform(-0.1872, 0.253),
+                                    np.random.uniform(-0.1705, 0.2195),
+                                    np.random.uniform(0.1693, 0.2895)], dtype=np.float32)
         self.steps = 0
 
         if 'pipette_position' in current_position:
